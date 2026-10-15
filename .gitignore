@@ -1,4 +1,53 @@
+# Copilot / local tooling
 .codegraph/
 graphify-out/
 .rtk/
+
+# OS / editor artifacts
 .DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+.vs/
+
+# .NET build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Aa]rtifacts/
+*.dll
+*.pdb
+*.cache
+*.log
+
+# Test and coverage outputs
+TestResults/
+[Tt]est[Rr]esult*/
+CoverageReport/
+coverage/
+*.coverage
+*.coveragexml
+*.cobertura.xml
+
+# Local tool caches
+.tools/
+.dotnet/
+
+# Visual Studio / user files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.jfm
+
+# NuGet / package restore artifacts
+packages/
+*.nupkg
+project.lock.json
+
+# Misc local generated files
+*.tmp
+*.temp
