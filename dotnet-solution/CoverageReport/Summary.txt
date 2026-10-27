@@ -1,0 +1,56 @@
+Summary
+  Generated on: 10/15/2026 - 11:05:49 AM
+  Coverage date: 10/15/2026 - 11:03:10 AM - 10/15/2026 - 11:05:43 AM
+  Parser: MultiReport (2x Cobertura)
+  Assemblies: 4
+  Classes: 28
+  Files: 18
+  Line coverage: 49.4%
+  Covered lines: 301
+  Uncovered lines: 308
+  Coverable lines: 609
+  Total lines: 995
+  Branch coverage: 43.5% (51 of 117)
+  Covered branches: 51
+  Total branches: 117
+  Method coverage: 56.8% (83 of 146)
+  Full method coverage: 47.2% (69 of 146)
+  Covered methods: 83
+  Fully covered methods: 69
+  Total methods: 146
+
+BookstoreRefactor.Api                                        53.2%
+  BookstoreRefactor.Api.Controllers.BooksController          68.1%
+  BookstoreRefactor.Api.Controllers.CategoriesController        0%
+  Program                                                    60.5%
+
+BookstoreRefactor.Application                                  64%
+  BookstoreRefactor.Application.BookApplicationService       61.8%
+  BookstoreRefactor.Application.BookCreateRequest             100%
+  BookstoreRefactor.Application.BookListQuery                 100%
+  BookstoreRefactor.Application.BookMapper                    100%
+  BookstoreRefactor.Application.BookResponse                  100%
+  BookstoreRefactor.Application.BookUpdateRequest             100%
+  BookstoreRefactor.Application.CategoryApplicationService   36.8%
+  BookstoreRefactor.Application.CategoryCreateRequest         100%
+  BookstoreRefactor.Application.CategoryResponse             57.1%
+  BookstoreRefactor.Application.CategoryUpdateRequest           0%
+  BookstoreRefactor.Application.DependencyInjection           100%
+  BookstoreRefactor.Application.NotFoundException             100%
+  BookstoreRefactor.Application.ValidationException           100%
+
+BookstoreRefactor.Domain                                       65%
+  BookstoreRefactor.Domain.Book                              59.8%
+  BookstoreRefactor.Domain.Category                            74%
+  BookstoreRefactor.Domain.DomainException                    100%
+
+BookstoreRefactor.Infrastructure                              6.5%
+  BookstoreRefactor.Infrastructure.BookDocument                 0%
+  BookstoreRefactor.Infrastructure.BookMapper                   0%
+  BookstoreRefactor.Infrastructure.BookRepository               0%
+  BookstoreRefactor.Infrastructure.CategoryDocument             0%
+  BookstoreRefactor.Infrastructure.CategoryMapper               0%
+  BookstoreRefactor.Infrastructure.CategoryRepository           0%
+  BookstoreRefactor.Infrastructure.DependencyInjection       40.9%
+  BookstoreRefactor.Infrastructure.MongoDbContext               0%
+  BookstoreRefactor.Infrastructure.MongoOptions                 0%

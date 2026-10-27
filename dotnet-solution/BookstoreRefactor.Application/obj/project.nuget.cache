@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Nnc5jUOoYog=",
+  "success": true,
+  "projectFilePath": "C:\\Devoteam\\Hackthon\\group-3\\bookstore-kata-dotnet\\dotnet-solution\\BookstoreRefactor.Application\\BookstoreRefactor.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\adriano.almeida.ext\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.0\\microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

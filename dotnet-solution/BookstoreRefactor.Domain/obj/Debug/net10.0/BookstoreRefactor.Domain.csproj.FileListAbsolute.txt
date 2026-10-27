@@ -1,0 +1,12 @@
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\bin\Debug\net10.0\BookstoreRefactor.Domain.deps.json
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\bin\Debug\net10.0\BookstoreRefactor.Domain.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\bin\Debug\net10.0\BookstoreRefactor.Domain.pdb
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.AssemblyInfoInputs.cache
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.AssemblyInfo.cs
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.csproj.CoreCompileInputs.cache
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.sourcelink.json
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\refint\BookstoreRefactor.Domain.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\BookstoreRefactor.Domain.pdb
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Domain\obj\Debug\net10.0\ref\BookstoreRefactor.Domain.dll

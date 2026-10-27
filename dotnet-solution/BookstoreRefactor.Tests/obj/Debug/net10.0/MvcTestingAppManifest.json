@@ -1,0 +1,6 @@
+{
+  "BookstoreRefactor.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Devoteam\\Hackthon\\group-3\\bookstore-kata-dotnet\\dotnet-solution\\BookstoreRefactor.Api",
+  "BookstoreRefactor.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Devoteam\\Hackthon\\group-3\\bookstore-kata-dotnet\\dotnet-solution\\BookstoreRefactor.Application",
+  "BookstoreRefactor.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Devoteam\\Hackthon\\group-3\\bookstore-kata-dotnet\\dotnet-solution\\BookstoreRefactor.Domain",
+  "BookstoreRefactor.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Devoteam\\Hackthon\\group-3\\bookstore-kata-dotnet\\dotnet-solution\\BookstoreRefactor.Infrastructure"
+}

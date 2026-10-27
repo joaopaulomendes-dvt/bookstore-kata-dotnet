@@ -1,0 +1,16 @@
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.csproj.AssemblyReference.cache
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.AssemblyInfoInputs.cache
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.AssemblyInfo.cs
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.csproj.CoreCompileInputs.cache
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.sourcelink.json
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\bin\Debug\net10.0\BookstoreRefactor.Application.deps.json
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\bin\Debug\net10.0\BookstoreRefactor.Application.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\bin\Debug\net10.0\BookstoreRefactor.Application.pdb
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\bin\Debug\net10.0\BookstoreRefactor.Domain.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\bin\Debug\net10.0\BookstoreRefactor.Domain.pdb
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\Bookstor.0C22DC15.Up2Date
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\refint\BookstoreRefactor.Application.dll
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\BookstoreRefactor.Application.pdb
+C:\Devoteam\Hackthon\group-3\bookstore-kata-dotnet\dotnet-solution\BookstoreRefactor.Application\obj\Debug\net10.0\ref\BookstoreRefactor.Application.dll
