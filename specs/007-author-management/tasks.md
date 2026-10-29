@@ -113,7 +113,7 @@
 - [x] T043 [P] Add the QA acceptance checklist in `docs/qa-checklist.md`
 - [x] T044 Update `Dockerfile`, `docker-compose.yml`, and `.gitignore` for .NET 10 while preserving MongoDB initialization and volumes
 - [x] T045 Run `dotnet test`, verify coverage thresholds and OpenAPI responses, and resolve failures in the relevant source/test files
-- [ ] T046 Verify all documentation and OpenAPI examples match implementation and record final branch/commit integration on `main`
+- [x] T046 Verify all documentation and OpenAPI examples match implementation and record final branch/commit integration on `main`
 
 ## Dependencies and Execution Order
 

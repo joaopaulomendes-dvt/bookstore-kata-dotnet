@@ -20,7 +20,7 @@ Configure the API with a MongoDB connection string for the `bookstore` database,
 dotnet run --project src/Bookstore.Api
 ```
 
-The local API should listen on port 8080. In Development, open the Scalar/Swagger reference exposed by the API and fetch `/openapi/v1.json`.
+The local API should listen on port 8080. In Development, open `http://localhost:8080/scalar/v1` for the Scalar UI or fetch the OpenAPI document at `http://localhost:8080/openapi/v1.json`.
 
 ## Validate author lifecycle
 
