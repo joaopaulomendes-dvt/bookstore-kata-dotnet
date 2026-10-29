@@ -1,0 +1,409 @@
+openapi: 3.1.0
+info:
+  title: Bookstore API
+  version: 1.0.0
+  description: |
+    Book catalog and Author profile API. Authentication is not currently configured.
+servers:
+  - url: /api
+paths:
+  /books:
+    get:
+      operationId: listBooks
+      summary: List books
+      parameters:
+        - $ref: '#/components/parameters/Category'
+        - $ref: '#/components/parameters/AuthorId'
+        - name: author
+          in: query
+          description: Legacy exact author-name filter.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: createBook
+      summary: Create a book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequest'
+      responses:
+        '201':
+          description: Book created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: updateBook
+      summary: Update book quantity and active status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookRequest'
+      responses:
+        '201':
+          description: Book updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /books/health:
+    get:
+      operationId: getBookHealth
+      summary: Check Book API health
+      responses:
+        '200':
+          description: API is available
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /books/{id}:
+    get:
+      operationId: getBookById
+      summary: Get a book by ID
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Book found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /books/single:
+    get:
+      operationId: getBookLegacy
+      deprecated: true
+      summary: Legacy lookup by ID, title, or author name
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: author
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /authors:
+    get:
+      operationId: listAuthors
+      summary: List Authors
+      parameters:
+        - name: includeInactive
+          in: query
+          description: Include soft-deleted Authors when true.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Matching Authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: createAuthor
+      summary: Create an Author
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthorRequest'
+      responses:
+        '201':
+          description: Author created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /authors/{id}:
+    get:
+      operationId: getAuthor
+      summary: Get an Author by ID
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - name: includeInactive
+          in: query
+          description: Allow retrieval of an inactive Author when true.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Author found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: softDeleteAuthor
+      summary: Soft-delete an Author
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '204':
+          description: Author deactivated; linked Books remain unchanged
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[0-9a-fA-F]{24}$'
+    Category:
+      name: category
+      in: query
+      schema:
+        type: string
+    AuthorId:
+      name: authorId
+      in: query
+      description: MongoDB ObjectId exposed as a 24-character hexadecimal string.
+      schema:
+        type: string
+        pattern: '^[0-9a-fA-F]{24}$'
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Conflict:
+      description: Duplicate Author name
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ServerError:
+      description: Unexpected server error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+  schemas:
+    CreateAuthorRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        biography:
+          type: string
+          nullable: true
+        website:
+          type: string
+          format: uri
+          nullable: true
+        birthDate:
+          type: string
+          format: date
+          nullable: true
+        nationality:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+    Author:
+      allOf:
+        - $ref: '#/components/schemas/CreateAuthorRequest'
+        - type: object
+          required: [id, active, createdAt, updatedAt]
+          properties:
+            id:
+              type: string
+              pattern: '^[0-9a-fA-F]{24}$'
+            active:
+              type: boolean
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+    CreateBookRequest:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+        authorId:
+          type: string
+          nullable: true
+          pattern: '^[0-9a-fA-F]{24}$'
+          description: Preferred stable Author reference.
+        author:
+          type: string
+          nullable: true
+          description: Legacy author name; resolved to an Author for compatibility.
+        categoryId:
+          type: string
+        quantity:
+          type: integer
+        description:
+          type: string
+        language:
+          type: string
+        active:
+          type: boolean
+          default: true
+        inactiveDate:
+          type: string
+          format: date-time
+          nullable: true
+        publisher:
+          type: string
+        publisherDate:
+          type: string
+          format: date-time
+          nullable: true
+    UpdateBookRequest:
+      type: object
+      required: [id, quantity, active]
+      properties:
+        id:
+          type: string
+        quantity:
+          type: integer
+        active:
+          type: boolean
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        authorId:
+          type: string
+          nullable: true
+        author:
+          type: string
+          nullable: true
+        categoryId:
+          type: integer
+        quantity:
+          type: integer
+        description:
+          type: string
+        language:
+          type: string
+        active:
+          type: boolean
+        inactiveDate:
+          type: string
+          format: date-time
+          nullable: true
+        publisher:
+          type: string
+        publisherDate:
+          type: string
+          format: date-time
+          nullable: true
+    ProblemDetails:
+      type: object
+      required: [type, title, status, detail, instance]
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          description: Request trace identifier.
+        traceId:
+          type: string

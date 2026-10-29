@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Bookstore.Domain/Bookstore.Domain.csproj" />
+    <ProjectReference Include="../Bookstore.Application/Bookstore.Application.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="MongoDB.Driver" />
+  </ItemGroup>
+</Project>

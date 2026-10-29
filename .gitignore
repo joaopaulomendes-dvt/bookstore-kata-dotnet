@@ -2,3 +2,18 @@
 graphify-out/
 .rtk/
 .DS_Store
+
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+packages/
+
+# Java build output retained only as local historical artifact
+target/
+
+# Test and coverage output
+coverage/
+**/coverage.cobertura.xml
+TestResults/
