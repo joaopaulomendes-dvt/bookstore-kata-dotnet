@@ -60,3 +60,87 @@ Sources:
 ## Limitations
 
 The Microsoft integration-test and Testcontainers documentation describe the host-factory and MongoDB-container patterns separately; the test setup composes those documented patterns. The backfill should be validated against a copy of representative legacy data before production use.
+
+## Evaluator follow-up
+
+### Recovering legacy behavior
+
+**Decision**: Use the Java controller and service at `8ec79aa^` as evidence for confirmed
+legacy behavior. The controller confirms health always returned 200 without a database
+check; list accepted a category filter; single lookup accepted ID, title, or author;
+create returned 201 when title was non-null; and update returned 201 when ID was supplied.
+The Java service confirms that category matching was case-sensitive, an unknown category
+fell back to listing all books, author filtering threw an unimplemented exception, and
+missing quantity/category/active values were projected as 0/0/false. Update changed
+quantity and active state and set `inactiveDate` to the current date when deactivating.
+The legacy ID lookup used Java reference equality (`==`) while title matching used value
+equality (`equals`).
+
+**Rationale**: These claims are directly visible in committed source. The effective
+deployed URL prefix beyond Jersey's `/books` class path, client dependence on the broken
+ID comparison, null entity serialization behavior, and whether every edge case was covered
+in production remain unconfirmed; they must not be presented as known facts.
+
+**Alternatives considered**: Treating the current .NET behavior as a proxy for legacy
+behavior (risks retroactively attributing new behavior to the old API); inferring behavior
+from the challenge prompt alone (insufficient evidence for detailed rules).
+
+### Coverage comparison
+
+**Decision**: Re-run Coverlet with its configured Domain/Application include filter and
+record the exact command, generated report, assembly set, and results. Separately measure
+the broader application assemblies only if needed to explain the denominator. Treat the
+evaluator's 75.5% as unreproduced until its instrumentation and exclusions are known.
+
+**Rationale**: The checked-in test project configures `coverlet.msbuild` with an 85% line
+threshold and `Include` restricted to `[Bookstore.Domain]*,[Bookstore.Application]*`.
+That scope is not equivalent to a harness-injected whole-repository result. Reproducible
+scope labels prevent misleading comparisons.
+
+**Alternatives considered**: Comparing percentages without denominator details (invalid);
+weakening or broadening the existing threshold solely to match an external result
+(unjustified and potentially conceals untested business code).
+
+### Logging and validation dependencies
+
+**Decision**: Adopt Serilog and FluentValidation. `COMPANY_GUIDELINES.md` lists both under
+standard dependencies, and the active constitution requires them for new work unless an
+approved exception is documented. No exception is recorded. Keep package versions in
+`Directory.Packages.props`; use FluentValidation at the HTTP request boundary while retaining
+domain invariants in the Domain layer.
+
+**Rationale**: `COMPANY_GUIDELINES.md` labels these as standard dependencies; the current
+constitution sets them as requirements for new work unless an approved exception exists.
+The current service does not reference either package, so compliance should be resolved
+deliberately rather than assumed. Existing RFC 7807 responses, JSON output, trace IDs, and
+domain validation remain compatibility requirements.
+
+**Alternatives considered**: Treating equivalent existing functionality as automatic
+compliance (does not satisfy the constitution without an approved exception); adding
+packages without comparing behavior or central version management (needless risk).
+
+### QA and delivery evidence
+
+**Decision**: Distinguish automated test evidence from manually executed acceptance checks.
+Only check off scenarios actually executed; record unexecuted scenarios and environmental
+blockers. Add a changelog entry only for delivered follow-up changes. Do not invent a
+historical feature branch or PR.
+
+**Rationale**: The current QA checklist is unchecked, while prior automated runs do not
+prove every operational or manual scenario. Accurate delivery metadata is required for
+review and evaluation.
+
+**Alternatives considered**: Marking every checklist line complete based on test-suite
+success (overstates evidence); creating a retroactive branch/PR record (misrepresents
+history).
+
+### Constitution ratification metadata
+
+**Decision**: Obtain the original ratification date from the repository owner. Preserve
+the existing TODO and temporary Sync Impact Report until the date and amendment status are
+confirmed; remove the report only under the constitution update workflow before commit.
+
+**Rationale**: A file timestamp or first commit cannot prove when governance was ratified.
+
+**Alternatives considered**: Guessing a date from Git history (not reliable); silently
+removing the TODO or report (would conceal unresolved governance state).

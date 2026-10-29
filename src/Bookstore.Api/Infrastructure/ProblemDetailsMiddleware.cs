@@ -2,6 +2,7 @@ using System.Text.Json;
 using Bookstore.Application.Authors;
 using Bookstore.Application.Common;
 using Bookstore.Domain.Common;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookstore.Api.Infrastructure;
@@ -33,6 +34,14 @@ public sealed class ProblemDetailsMiddleware(
                     StatusCodes.Status400BadRequest,
                     "Invalid request",
                     exception.Message),
+                ValidationException validationException => (
+                    StatusCodes.Status400BadRequest,
+                    "Invalid request",
+                    string.Join(
+                        " ",
+                        validationException.Errors
+                            .Select(error => error.ErrorMessage)
+                            .Distinct())),
                 JsonException => (
                     StatusCodes.Status400BadRequest,
                     "Invalid request",

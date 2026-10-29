@@ -125,3 +125,96 @@ The feature implementation is already integrated on `main`; the historical `007-
 ## Complexity Tracking
 
 No constitution violations are identified. The separate Domain/Application/Infrastructure projects are justified by the company’s architecture instructions and persistence boundary; event infrastructure, EF Core, and additional runtime services remain out of scope.
+
+## Follow-up Evaluator Remediation Plan
+
+**Purpose**: Address the latest evaluator feedback with source-backed documentation,
+reproducible verification evidence, explicit dependency compliance, and an accurate
+delivery record. This is follow-up work; it does not change the historical delivery
+branch or claim that previous work was reviewed through a PR.
+
+### Scope and decisions
+
+- Improve `docs/functional.md` with a business narrative for the catalog, Author lifecycle,
+  Book/Author association, compatibility behavior, and relevant business decisions.
+  Treat the pre-removal Java sources in Git history as evidence. Label any behavior that
+  cannot be confirmed from source or tests as unknown rather than presenting it as fact.
+- Expand `docs/technical.md` with Mermaid architecture and sequence diagrams for Book
+  creation/Author resolution, Author soft deletion, and the backfill. Diagrams must match
+  the current code and must not imply integrations that are not implemented.
+- Execute the scenarios in `docs/qa-checklist.md` where the available environment permits.
+  Record dated evidence and distinguish automated test results from manual acceptance.
+  Leave every unexecuted item unchecked.
+- Re-run and explain the coverage measurements. The repository's Coverlet configuration
+  includes Domain and Application and enforces 85% line coverage. The evaluator's 75.5%
+  result has a different or unknown denominator; do not claim equivalence unless its exact
+  assemblies, exclusions, and instrumentation are reproduced. If evaluator configuration
+  is unavailable, state that explicitly and report local scopes separately.
+- Resolve logging and validation guideline compliance before modifying dependencies.
+  `COMPANY_GUIDELINES.md` lists Serilog and FluentValidation as standard dependencies, and
+  the current constitution requires them for new work unless an approved exception is
+  documented. Default to adopting them for this service if no exception is approved.
+  Preserve existing response shapes, validation rules, JSON output, and trace correlation.
+  Package versions remain centrally managed in `Directory.Packages.props`.
+- Add a changelog entry describing only changes actually delivered in this follow-up.
+  Do not fabricate a historical branch, PR, QA sign-off, or past changelog.
+- Ask the repository owner to confirm the original constitution ratification date. Until
+  confirmed, retain its TODO. Remove the temporary Sync Impact Report comment only as part
+  of an approved constitution update and before that file is committed.
+
+### Design impact
+
+No domain entities, persistence schemas, API routes, or OpenAPI operations are intended to
+change. Reuse the current `data-model.md` and OpenAPI contract. Update the quickstart only
+if verification commands or prerequisites change. Any dependency implementation must
+preserve the existing public API contract and be covered by the current unit/integration
+tests.
+
+### Constitution Check
+
+- **Architecture and API**: documentation changes describe existing .NET 10 Minimal API
+  behavior; no route or persistence redesign is proposed.
+- **Secure errors and observability**: dependency work must preserve Problem Details,
+  JSON logs, and trace ID behavior.
+- **Automated verification**: automated coverage and manually executed QA scenarios must
+  be reported separately; no threshold may be reduced or met by excluding business code.
+- **Documentation and governance**: requirements and historical delivery facts must be
+  traceable; unknown ratification date and unexecuted QA must remain explicit.
+- **Gate result**: PASS for planning. Dependency adoption remains a gated implementation
+  decision; an exception requires repository-owner approval and written rationale.
+
+### Acceptance criteria
+
+1. Functional documentation includes a readable business narrative and an explicit
+   separation of confirmed legacy behavior from unknowns.
+2. Technical documentation contains accurate, readable diagrams for the actual runtime
+   and requested flows.
+3. Each checked QA item has dated evidence; unexecuted manual/operational checks remain
+   unchecked and are listed as pending.
+4. Coverage documentation identifies the local assembly scope, threshold, command,
+   result, and evaluator comparison limitation. The 75.5% evaluator number is not
+   represented as reproduced without matching instrumentation.
+5. Serilog/FluentValidation are adopted and verified, or an approved exception is linked
+   and justified. Existing API validation/error behavior remains compatible.
+6. Changelog, README, test guide, technical debt, OpenAPI, and feature docs remain
+   mutually consistent; no historical branch/PR/QA claim is invented.
+7. Final .NET 10 build/test and configured coverage gates pass with Docker access. If Docker
+   is unavailable, the integration verification is reported as blocked, not passed.
+
+### Risks and mitigations
+
+| Risk | Mitigation |
+|---|---|
+| Git history does not prove a business rule described in existing docs | Cite only source/test-confirmed behavior; label uncertainty and avoid invented legacy semantics |
+| Manual QA cannot be performed in the available environment | Leave affected checks open and record the missing prerequisite and evidence owner |
+| Evaluator's coverage denominator is unavailable | Request evaluator instrumentation details; report reproducible local scopes separately |
+| Serilog/FluentValidation change logging or validation behavior | Add dependencies through central package management, preserve contracts, and run focused plus full tests |
+| Existing uncommitted changes are mixed with follow-up work | Inspect and preserve them before any future branch/commit; do not stash, discard, commit, or push them implicitly |
+| Constitution ratification date remains unknown | Keep the explicit TODO and report the governance item as pending owner confirmation |
+
+### Delivery strategy
+
+This plan does not create a branch, commit, or push. For implementation, use a new
+remediation branch only after the existing dirty worktree has been reviewed and safely
+separated. If a PR is opened for the follow-up, describe it as new remediation work; do
+not imply it changes the historical delivery record.

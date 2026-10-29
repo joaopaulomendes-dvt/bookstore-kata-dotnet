@@ -5,8 +5,10 @@
   <ItemGroup>
     <ProjectReference Include="../Bookstore.Application/Bookstore.Application.csproj" />
     <ProjectReference Include="../Bookstore.Infrastructure/Bookstore.Infrastructure.csproj" />
+    <PackageReference Include="FluentValidation" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
 </Project>

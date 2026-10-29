@@ -144,3 +144,48 @@ Deliver the documented .NET Book API first as the compatibility MVP, then add Au
 - [x] T050 Correct the T014 documentation claim, record actual branch history in the spec/plan/tasks, and remove harness-only material from `README.md`.
 - [x] T051 Document Docker socket requirements for Testcontainers and the configured 85% Domain/Application Coverlet threshold without misclassifying Docker-unavailable failures or changing coverage scope.
 - [x] T052 Verify links, confirm no legacy Java project remains, run all .NET tests with Docker access, and record final coverage results.
+
+## Phase 9: Follow-up evaluator remediation
+
+**Purpose**: Address the latest documentation, evidence, coverage, dependency-compliance,
+and delivery concerns without changing historical facts or claiming unperformed QA.
+
+### Historical behavior and documentation
+
+- [x] T053 Verify legacy Book behavior from the Java source and tests in Git history, and record confirmed facts and unresolved points in `specs/007-author-management/research.md`.
+- [x] T054 [P] Rewrite `docs/functional.md` with a business narrative for the catalog, Author lifecycle, Book association, compatibility, and decisions; distinguish history-confirmed behavior from uncertainty.
+- [x] T055 [P] Add Mermaid architecture and flow diagrams for Book creation/Author resolution, Author soft deletion, and backfill to `docs/technical.md`, verifying each against current source.
+
+### QA and coverage evidence
+
+- [x] T056 Execute each feasible scenario in `docs/qa-checklist.md`; mark only verified scenarios and record date, method, result, and unexecuted prerequisites in `docs/qa-checklist.md` and `docs/testing.md`.
+- [x] T057 Re-run Coverlet with its configured Domain/Application scope, record exact command, assemblies, threshold, and results in `docs/testing.md`, and separately investigate the evaluator's 75.5% denominator without claiming equivalence unless reproduced.
+
+### Dependency compliance and governance
+
+- [x] T058 Compare current JSON console logging and request validation with `COMPANY_GUIDELINES.md` and `.specify/memory/constitution.md`; record a decision to adopt Serilog/FluentValidation or obtain a repository-owner-approved exception in `specs/007-author-management/research.md`.
+- [x] T059 Apply the approved dependency decision through `Directory.Packages.props`, affected `src/**/*.csproj` files, API logging setup, validation code, and focused tests while preserving API behavior.
+- [x] T060 Add `CHANGELOG.md` entries for only the follow-up changes actually completed and reconcile user-visible claims across `README.md`, `docs/`, and `specs/007-author-management/`.
+- [x] T061 Obtain the original ratification date from the repository owner and update `.specify/memory/constitution.md` only when confirmed; retain the TODO if unknown and remove the temporary Sync Impact Report only as part of the approved pre-commit constitution update. The owner confirmed the date is unknown, so the TODO and Sync Impact Report remain unchanged.
+
+### Final verification
+
+- [x] T062 Run the .NET 10 build and full tests with Docker socket access, verify configured coverage thresholds, check documentation links and OpenAPI consistency, and record blocked checks as pending rather than passing in `docs/testing.md`.
+
+## Phase 9 Dependencies and Parallel Work
+
+- T053 must precede T054 because the functional narrative must be anchored in verified legacy behavior.
+- T055 can proceed independently from T053/T054 after checking current .NET implementation.
+- T056, T057, and T058 can proceed independently; T059 depends on the decision and approval recorded by T058.
+- T060 depends on the actual outcomes of T054–T059 and T061 so the changelog and documentation describe only completed work.
+- T062 is the final gate after implementation and evidence tasks. If Docker or evaluator instrumentation is unavailable, report the specific limitation and do not claim a pass for that check.
+- Do not create a retroactive branch or PR. Any future branch/PR must represent only this new follow-up work and must first account for existing uncommitted worktree changes.
+
+## Phase 9 Independent Verification Criteria
+
+- **T054**: A product owner can understand the catalog and Author business lifecycle without relying on endpoint tables; legacy claims are supported by history/tests or explicitly qualified.
+- **T055**: Diagrams render as Mermaid and each component/sequence matches current source.
+- **T056**: Each checked box has a dated observed result; every unexecuted manual or operational scenario remains unchecked.
+- **T057**: The local coverage command, include scope, threshold, and measured result are explicit; the external 75.5% is marked unreproduced unless its denominator is matched.
+- **T059**: Standard dependencies or the approved exception are present, existing error/log/validation semantics pass regression tests, and package versions remain centrally managed.
+- **T062**: Build, test, coverage, OpenAPI, and documentation checks have explicit outcomes; any environmental blocker is identified without being counted as a successful verification.

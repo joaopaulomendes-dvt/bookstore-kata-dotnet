@@ -2,6 +2,8 @@
 
 A .NET 10 Minimal API for bookstore inventory and Author profiles, backed by MongoDB. The service preserves the legacy Book API while adding stable Author identities, profile metadata, soft deletion, and Book-to-Author references.
 
+Unreleased changes are summarized in [CHANGELOG.md](./CHANGELOG.md).
+
 ## Prerequisites
 
 - .NET 10 SDK
@@ -57,6 +59,7 @@ See [docs/testing.md](./docs/testing.md) for focused runs and report locations.
 - `Bookstore.Application` coordinates use cases through repository interfaces.
 - `Bookstore.Infrastructure` implements MongoDB repositories, indexes, and the Author backfill.
 - `Bookstore.Api` hosts Minimal API route groups, OpenAPI, trace correlation, and RFC 7807 errors.
+- Serilog provides structured JSON logs, and FluentValidation validates incoming request records.
 - MongoDB ObjectIds remain the persisted identity; API DTOs expose their hexadecimal string representation.
 - `Book.authorId` is the stable reference. The legacy `author` string remains for compatibility.
 - Author deletion is soft; linked Books remain unchanged.

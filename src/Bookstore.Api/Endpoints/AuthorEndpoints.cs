@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using Bookstore.Api.Infrastructure;
+using Bookstore.Api.Validation;
 using Bookstore.Application.Authors;
 using Bookstore.Application.Common;
 using Bookstore.Domain.Authors;
+using FluentValidation;
 
 namespace Bookstore.Api.Endpoints;
 
@@ -46,9 +48,11 @@ public static class AuthorEndpoints
 
     private static async Task<IResult> CreateAsync(
         CreateAuthorRequest request,
+        IValidator<CreateAuthorRequest> validator,
         AuthorService service,
         CancellationToken cancellationToken)
     {
+        await validator.ValidateRequestAsync(request, cancellationToken);
         var author = await service.CreateAsync(
             request.Name,
             request.Biography,

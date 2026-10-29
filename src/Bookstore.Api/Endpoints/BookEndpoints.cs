@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using Bookstore.Api.Infrastructure;
+using Bookstore.Api.Validation;
 using Bookstore.Application.Books;
 using Bookstore.Application.Common;
 using Bookstore.Domain.Books;
 using Bookstore.Domain.Common;
 using Bookstore.Infrastructure.Configuration;
+using FluentValidation;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -111,9 +113,11 @@ public static class BookEndpoints
 
     private static async Task<IResult> CreateAsync(
         CreateBookRequest request,
+        IValidator<CreateBookRequest> validator,
         BookService service,
         CancellationToken cancellationToken)
     {
+        await validator.ValidateRequestAsync(request, cancellationToken);
         var book = await service.CreateAsync(
             new CreateBookCommand(
                 request.Title,
@@ -134,9 +138,11 @@ public static class BookEndpoints
 
     private static async Task<IResult> UpdateAsync(
         UpdateBookRequest request,
+        IValidator<UpdateBookRequest> validator,
         BookService service,
         CancellationToken cancellationToken)
     {
+        await validator.ValidateRequestAsync(request, cancellationToken);
         var id = request.Id ??
                  throw new DomainValidationException("Book ID is required.");
         var book = await service.UpdateAsync(
