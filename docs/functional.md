@@ -11,7 +11,7 @@ The Bookstore API manages the bookstore catalog and the Author profiles associat
 | Check service and MongoDB availability | `GET /api/books/health` | Returns 200 when MongoDB responds to a ping. |
 | List books | `GET /api/books` | Returns all books, optionally filtered by category, Author ObjectId, or the legacy exact Author name. |
 | Retrieve a book | `GET /api/books/{id}` | Returns a matching book or 404. IDs must be 24-character hexadecimal ObjectIds. |
-| Legacy single-book lookup | `GET /api/books/single?id=…` or `?name=…` | Retained for compatibility; new clients should use the ID route. |
+| Legacy single-book lookup | `GET /api/books/single?id=…`, `?name=…`, or `?author=…` | Retained for compatibility; new clients should use the ID route. |
 | Create a book | `POST /api/books` | Requires a nonblank title. Accepts an Author ID or legacy Author name. |
 | Update inventory state | `PUT /api/books` | Updates quantity and active state for the requested ID. Deactivation records the current UTC time. |
 

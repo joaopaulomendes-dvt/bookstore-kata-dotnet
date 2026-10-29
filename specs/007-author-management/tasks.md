@@ -21,11 +21,11 @@
 
 **Purpose**: Provide shared persistence, API error handling, logging, and test infrastructure before feature stories.
 
-- [x] T007 [P] Add strongly typed MongoDB settings, connection registration, and `IMongoDatabase` setup in `src/Bookstore.Infrastructure/Configuration/MongoDbRegistration.cs`
+- [x] T007 [P] Add MongoDB client/database registration and `IMongoDatabase` setup in `src/Bookstore.Infrastructure/Configuration/BookstoreInfrastructureRegistration.cs` and `MongoDatabaseInitializer.cs`
 - [x] T008 [P] Add RFC 7807 exception handling and trace-ID response/log correlation in `src/Bookstore.Api/Infrastructure/ProblemDetailsMiddleware.cs`
 - [x] T009 Configure JSON console logging, request trace enrichment, OpenAPI generation, and Development-only Scalar UI in `src/Bookstore.Api/Program.cs`
 - [x] T010 Add an xUnit MongoDB Testcontainer fixture and `WebApplicationFactory<Program>` configuration override in `tests/Bookstore.Tests/Infrastructure/BookstoreApiFactory.cs` and `MongoDbFixture.cs`
-- [x] T011 Add service configuration validation and safe connection-string handling in `src/Bookstore.Api/appsettings.json` and `src/Bookstore.Api/Program.cs`
+- [x] T011 Add MongoDB configuration validation and safe connection-string handling in `src/Bookstore.Infrastructure/Configuration/BookstoreInfrastructureRegistration.cs`
 
 ## Phase 3: User Story 1 - Modernized, documented bookstore API (Priority: P1)
 
@@ -98,7 +98,7 @@
 
 - [x] T034 [US4] Add optional `AuthorId` MongoDB mapping and string API projection while retaining legacy `author` in `src/Bookstore.Domain/Books/Book.cs` and `src/Bookstore.Infrastructure/Books/MongoBookRepository.cs`
 - [x] T035 [US4] Resolve explicit authorId and legacy author-name writes through Author use cases in `src/Bookstore.Application/Books/BookService.cs`
-- [x] T036 [US4] Add an idempotent legacy author backfill with collision/blank reporting in `src/Bookstore.Infrastructure/Migrations/AuthorBackfill.cs`
+- [x] T036 [US4] Add an idempotent legacy author backfill with skipped-record reporting in `src/Bookstore.Infrastructure/Migrations/AuthorBackfill.cs`
 - [x] T037 [US4] Add authorId filtering and legacy author-name lookup to Book route/query handling in `src/Bookstore.Api/Endpoints/BookEndpoints.cs`
 - [x] T038 [US4] Update Book endpoint OpenAPI request/response schemas and filtering examples in `specs/007-author-management/contracts/openapi.yaml`
 

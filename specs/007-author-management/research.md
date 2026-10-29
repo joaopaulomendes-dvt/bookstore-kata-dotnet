@@ -14,7 +14,7 @@ Sources:
 
 ## Backfilling legacy author names
 
-**Decision**: Add optional `authorId` to Book documents, keep the legacy `author` field during transition, and run an idempotent backfill. Normalize names for matching only, upsert an Author for each normalized value, and link Books by generated ObjectId. Do not use the author name as a permanent relationship key. Report blank values and ambiguous collisions rather than silently deleting or merging unrelated data.
+**Decision**: Add optional `authorId` to Book documents, keep the legacy `author` field during transition, and run an idempotent backfill. Normalize names for matching only, upsert an Author for each normalized value, and link Books by generated ObjectId. Do not use the author name as a permanent relationship key. Count skipped records in the migration report. Names that normalize identically are intentionally matched to one Author; the migration cannot determine whether same-name people are distinct, so review source data if that risk applies. The migration does not delete Author profiles.
 
 **Rationale**: A staged additive migration permits old and new document shapes to coexist and makes retry safe. Stable ObjectIds remain valid if a name changes.
 

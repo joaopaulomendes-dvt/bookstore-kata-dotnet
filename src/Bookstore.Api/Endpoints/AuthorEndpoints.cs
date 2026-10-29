@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using Bookstore.Api.Infrastructure;
 using Bookstore.Application.Authors;
 using Bookstore.Application.Common;
 using Bookstore.Domain.Authors;
@@ -12,28 +14,32 @@ public static class AuthorEndpoints
             .WithName("CreateAuthor")
             .WithSummary("Create an Author profile.")
             .Produces<AuthorResponse>(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status409Conflict);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status409Conflict)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapGet("/", ListAsync)
             .WithName("ListAuthors")
             .WithSummary("List Authors, excluding inactive profiles by default.")
             .Produces<IReadOnlyList<AuthorResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapGet("/{id}", GetAsync)
             .WithName("GetAuthor")
             .WithSummary("Get an Author by ID.")
             .Produces<AuthorResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status404NotFound)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapDelete("/{id}", DeleteAsync)
             .WithName("SoftDeleteAuthor")
             .WithSummary("Soft-delete an Author without modifying linked Books.")
             .Produces(StatusCodes.Status204NoContent)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status404NotFound)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         return group;
     }
@@ -106,12 +112,12 @@ public static class AuthorEndpoints
 }
 
 public sealed record CreateAuthorRequest(
-    string? Name,
-    string? Biography,
-    string? Website,
-    DateOnly? BirthDate,
-    string? Nationality,
-    string? Email);
+    [property: Required, StringLength(255, MinimumLength = 1)] string Name,
+    string? Biography = null,
+    [property: Url] string? Website = null,
+    DateOnly? BirthDate = null,
+    string? Nationality = null,
+    [property: EmailAddress] string? Email = null);
 
 public sealed record AuthorResponse(
     string Id,

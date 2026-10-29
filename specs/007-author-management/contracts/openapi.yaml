@@ -6,11 +6,12 @@ info:
     Book catalog and Author profile API. Authentication is not currently configured.
 servers:
   - url: /api
+security: []
 paths:
   /books:
     get:
-      operationId: listBooks
-      summary: List books
+      operationId: ListBooks
+      summary: List books with optional category and author filters.
       parameters:
         - $ref: '#/components/parameters/Category'
         - $ref: '#/components/parameters/AuthorId'
@@ -33,8 +34,8 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
     post:
-      operationId: createBook
-      summary: Create a book
+      operationId: CreateBook
+      summary: Create a book.
       requestBody:
         required: true
         content:
@@ -55,8 +56,8 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
     put:
-      operationId: updateBook
-      summary: Update book quantity and active status
+      operationId: UpdateBook
+      summary: Update book quantity and active state.
       requestBody:
         required: true
         content:
@@ -78,8 +79,8 @@ paths:
           $ref: '#/components/responses/ServerError'
   /books/health:
     get:
-      operationId: getBookHealth
-      summary: Check Book API health
+      operationId: BookApiHealth
+      summary: Check API and MongoDB availability.
       responses:
         '200':
           description: API is available
@@ -87,8 +88,8 @@ paths:
           $ref: '#/components/responses/ServerError'
   /books/{id}:
     get:
-      operationId: getBookById
-      summary: Get a book by ID
+      operationId: GetBookById
+      summary: Get a book by ID.
       parameters:
         - $ref: '#/components/parameters/Id'
       responses:
@@ -106,9 +107,9 @@ paths:
           $ref: '#/components/responses/ServerError'
   /books/single:
     get:
-      operationId: getBookLegacy
-      deprecated: true
-      summary: Legacy lookup by ID, title, or author name
+      operationId: GetBookLegacy
+      summary: Legacy lookup by ID, title, or author name.
+      description: Use GET /api/books/{id} for ID lookups in new clients.
       parameters:
         - name: id
           in: query
@@ -137,8 +138,8 @@ paths:
           $ref: '#/components/responses/ServerError'
   /authors:
     get:
-      operationId: listAuthors
-      summary: List Authors
+      operationId: ListAuthors
+      summary: List Authors, excluding inactive profiles by default.
       parameters:
         - name: includeInactive
           in: query
@@ -160,8 +161,8 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
     post:
-      operationId: createAuthor
-      summary: Create an Author
+      operationId: CreateAuthor
+      summary: Create an Author profile.
       requestBody:
         required: true
         content:
@@ -183,8 +184,8 @@ paths:
           $ref: '#/components/responses/ServerError'
   /authors/{id}:
     get:
-      operationId: getAuthor
-      summary: Get an Author by ID
+      operationId: GetAuthor
+      summary: Get an Author by ID.
       parameters:
         - $ref: '#/components/parameters/Id'
         - name: includeInactive
@@ -207,8 +208,8 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
     delete:
-      operationId: softDeleteAuthor
-      summary: Soft-delete an Author
+      operationId: SoftDeleteAuthor
+      summary: Soft-delete an Author without modifying linked Books.
       parameters:
         - $ref: '#/components/parameters/Id'
       responses:
@@ -247,25 +248,25 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: '#/components/schemas/ApiProblemDetails'
     NotFound:
       description: Resource not found
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: '#/components/schemas/ApiProblemDetails'
     Conflict:
       description: Duplicate Author name
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: '#/components/schemas/ApiProblemDetails'
     ServerError:
       description: Unexpected server error
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: '#/components/schemas/ApiProblemDetails'
   schemas:
     CreateAuthorRequest:
       type: object
@@ -276,28 +277,23 @@ components:
           minLength: 1
           maxLength: 255
         biography:
-          type: string
-          nullable: true
+          type: [string, "null"]
         website:
-          type: string
+          type: [string, "null"]
           format: uri
-          nullable: true
         birthDate:
-          type: string
+          type: [string, "null"]
           format: date
-          nullable: true
         nationality:
-          type: string
-          nullable: true
+          type: [string, "null"]
         email:
-          type: string
+          type: [string, "null"]
           format: email
-          nullable: true
     Author:
       allOf:
         - $ref: '#/components/schemas/CreateAuthorRequest'
         - type: object
-          required: [id, active, createdAt, updatedAt]
+          required: [id, name, biography, website, birthDate, nationality, email, active, createdAt, updatedAt]
           properties:
             id:
               type: string
@@ -317,35 +313,31 @@ components:
         title:
           type: string
         authorId:
-          type: string
-          nullable: true
+          type: [string, "null"]
           pattern: '^[0-9a-fA-F]{24}$'
           description: Preferred stable Author reference.
         author:
-          type: string
-          nullable: true
+          type: [string, "null"]
           description: Legacy author name; resolved to an Author for compatibility.
         categoryId:
-          type: string
+          type: [string, "null"]
         quantity:
           type: integer
         description:
-          type: string
+          type: [string, "null"]
         language:
-          type: string
+          type: [string, "null"]
         active:
           type: boolean
           default: true
         inactiveDate:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
         publisher:
-          type: string
+          type: [string, "null"]
         publisherDate:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
     UpdateBookRequest:
       type: object
       required: [id, quantity, active]
@@ -358,40 +350,37 @@ components:
           type: boolean
     Book:
       type: object
+      required: [id, title, authorId, author, categoryId, quantity, description, language, active, inactiveDate, publisher, publisherDate]
       properties:
         id:
           type: string
         title:
-          type: string
+          type: [string, "null"]
         authorId:
-          type: string
-          nullable: true
+          type: [string, "null"]
         author:
-          type: string
-          nullable: true
+          type: [string, "null"]
         categoryId:
           type: integer
         quantity:
           type: integer
         description:
-          type: string
+          type: [string, "null"]
         language:
-          type: string
+          type: [string, "null"]
         active:
           type: boolean
         inactiveDate:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
         publisher:
-          type: string
+          type: [string, "null"]
         publisherDate:
-          type: string
+          type: [string, "null"]
           format: date-time
-          nullable: true
-    ProblemDetails:
+    ApiProblemDetails:
       type: object
-      required: [type, title, status, detail, instance]
+      required: [type, title, status, detail, instance, traceId]
       properties:
         type:
           type: string

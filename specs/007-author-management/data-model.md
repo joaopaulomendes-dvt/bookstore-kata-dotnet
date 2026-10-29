@@ -52,6 +52,6 @@ Retains the existing catalog entity and fields:
 - Backfill each distinct normalized nonblank legacy Book `author` into one Author and set the Book's `authorId`.
 - The backfill must be idempotent, preserve existing valid `authorId` values, and leave the legacy string untouched.
 - Books with blank author values remain unlinked and are reported.
-- Conflicting or ambiguous normalized names must be reported for review; do not silently merge or delete profiles.
+- Names that normalize identically are intentionally matched to one Author. The backfill does not infer whether same-name people are distinct; review source data first if that risk applies. It never deletes Author profiles.
 - For new Book writes, an explicit `authorId` must parse and refer to an active Author. Legacy `author` input resolves an active Author by normalized name and creates a minimal Author if none exists.
 - Author name is required and at most 255 characters. Website, when present, must be an absolute HTTP/HTTPS URI. Email, when present, must be valid.

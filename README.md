@@ -31,6 +31,7 @@ The connection string may alternatively be supplied as `MONGODB_URI`. The API fa
 - OpenAPI JSON: `http://localhost:8080/openapi/v1.json`
 - Scalar UI in Development: `http://localhost:8080/scalar/v1`
 - The design-first contract is in [specs/007-author-management/contracts/openapi.yaml](./specs/007-author-management/contracts/openapi.yaml).
+- No staging environment or staging OpenAPI URL is configured for this repository.
 
 ## Testing
 

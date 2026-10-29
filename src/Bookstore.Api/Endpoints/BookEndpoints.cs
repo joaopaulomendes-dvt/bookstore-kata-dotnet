@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using Bookstore.Api.Infrastructure;
 using Bookstore.Application.Books;
 using Bookstore.Application.Common;
 using Bookstore.Domain.Books;
@@ -14,42 +16,49 @@ public static class BookEndpoints
     {
         group.MapGet("/health", HealthAsync)
             .WithName("BookApiHealth")
-            .WithSummary("Check API and MongoDB availability.");
+            .WithSummary("Check API and MongoDB availability.")
+            .Produces(StatusCodes.Status200OK)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapGet("/", ListAsync)
             .WithName("ListBooks")
             .WithSummary("List books with optional category and author filters.")
             .Produces<IReadOnlyList<BookResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapGet("/single", FindLegacyAsync)
             .WithName("GetBookLegacy")
             .WithSummary("Legacy lookup by ID, title, or author name.")
             .WithDescription("Use GET /api/books/{id} for ID lookups in new clients.")
             .Produces<BookResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status404NotFound)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapGet("/{id}", GetByIdAsync)
             .WithName("GetBookById")
             .WithSummary("Get a book by ID.")
             .Produces<BookResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status404NotFound)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapPost("/", CreateAsync)
             .WithName("CreateBook")
             .WithSummary("Create a book.")
             .Produces<BookResponse>(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status404NotFound)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         group.MapPut("/", UpdateAsync)
             .WithName("UpdateBook")
             .WithSummary("Update book quantity and active state.")
             .Produces<BookResponse>(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .ProducesApiProblem(StatusCodes.Status400BadRequest)
+            .ProducesApiProblem(StatusCodes.Status404NotFound)
+            .ProducesApiProblem(StatusCodes.Status500InternalServerError);
 
         return group;
     }
@@ -160,7 +169,7 @@ public static class BookEndpoints
 }
 
 public sealed record CreateBookRequest(
-    string? Title = null,
+    [property: Required] string Title,
     string? AuthorId = null,
     string? Author = null,
     string? CategoryId = null,
@@ -172,7 +181,10 @@ public sealed record CreateBookRequest(
     string? Publisher = null,
     DateTime? PublisherDate = null);
 
-public sealed record UpdateBookRequest(string? Id, int Quantity, bool Active);
+public sealed record UpdateBookRequest(
+    [property: Required] string Id,
+    int Quantity,
+    bool Active);
 
 public sealed record BookResponse(
     string Id,

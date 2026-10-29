@@ -61,7 +61,7 @@ public sealed class ProblemDetailsMiddleware(
             }
             else
             {
-                logger.LogInformation(
+                logger.LogWarning(
                     "Request {TraceId} failed with status {StatusCode}.",
                     context.TraceIdentifier,
                     status);

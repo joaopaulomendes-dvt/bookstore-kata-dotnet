@@ -97,16 +97,68 @@ public sealed class BookEndpointsTests(MongoDbFixture fixture)
     }
 
     [Fact]
-    public async Task OpenApiDocument_IsAvailable()
+    public async Task OpenApiDocument_ApiStarts_ListsRoutesAndErrorResponses()
     {
         using var factory = fixture.CreateFactory();
         using var client = factory.CreateClient();
 
         var response = await client.GetAsync("/openapi/v1.json");
-        var document = await response.Content.ReadAsStringAsync();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Contains("/api/books", document, StringComparison.Ordinal);
-        Assert.Contains("/api/authors", document, StringComparison.Ordinal);
+        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var paths = document.RootElement.GetProperty("paths");
+        var schemas = document.RootElement.GetProperty("components").GetProperty("schemas");
+        Assert.True(paths.TryGetProperty("/api/books", out var books));
+        Assert.True(paths.TryGetProperty("/api/authors", out var authors));
+        Assert.Equal(
+            "#/components/schemas/CreateBookRequest",
+            books.GetProperty("post").GetProperty("requestBody")
+                .GetProperty("content").GetProperty("application/json")
+                .GetProperty("schema").GetProperty("$ref").GetString());
+        Assert.Equal(
+            "#/components/schemas/CreateAuthorRequest",
+            authors.GetProperty("post").GetProperty("requestBody")
+                .GetProperty("content").GetProperty("application/json")
+                .GetProperty("schema").GetProperty("$ref").GetString());
+        Assert.Contains(
+            "title",
+            schemas.GetProperty("CreateBookRequest").GetProperty("required")
+                .EnumerateArray().Select(property => property.GetString()));
+        Assert.Contains(
+            "name",
+            schemas.GetProperty("CreateAuthorRequest").GetProperty("required")
+                .EnumerateArray().Select(property => property.GetString()));
+        Assert.DoesNotContain(
+            "biography",
+            schemas.GetProperty("CreateAuthorRequest").GetProperty("required")
+                .EnumerateArray().Select(property => property.GetString()));
+        Assert.Equal(
+            "Use GET /api/books/{id} for ID lookups in new clients.",
+            paths.GetProperty("/api/books/single").GetProperty("get")
+                .GetProperty("description").GetString());
+        Assert.Equal(
+            255,
+            schemas.GetProperty("CreateAuthorRequest").GetProperty("properties")
+                .GetProperty("name").GetProperty("maxLength").GetInt32());
+        Assert.Contains(
+            "traceId",
+            schemas.GetProperty("ApiProblemDetails").GetProperty("required")
+                .EnumerateArray().Select(property => property.GetString()));
+
+        foreach (var path in paths.EnumerateObject())
+        {
+            foreach (var operation in path.Value.EnumerateObject()
+                         .Where(property => property.Name is "get" or "post" or "put" or "delete"))
+            {
+                Assert.True(
+                    operation.Value.GetProperty("responses").TryGetProperty("500", out _),
+                    $"{operation.Name.ToUpperInvariant()} {path.Name} must document HTTP 500.");
+                var serverError = operation.Value.GetProperty("responses").GetProperty("500");
+                Assert.Equal(
+                    "#/components/schemas/ApiProblemDetails",
+                    serverError.GetProperty("content").GetProperty("application/problem+json")
+                        .GetProperty("schema").GetProperty("$ref").GetString());
+            }
+        }
     }
 }
