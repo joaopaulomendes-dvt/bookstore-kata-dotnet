@@ -43,3 +43,4 @@ Validation errors return 400, missing resources return 404, normalized duplicate
 - The legacy ID lookup compared Java strings by reference rather than value; the new lookup uses ObjectId equality.
 - There is no authentication, paging, bulk update, Book delete route, or merge workflow for duplicate people.
 - Normalized names are matching aids, not permanent identity. Human review may be needed when same-name people are encountered.
+- See the [technical-debt register](./technical-debt.md) for operational limitations and follow-up actions.

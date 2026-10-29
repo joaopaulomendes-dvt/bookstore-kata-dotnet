@@ -50,3 +50,5 @@ The maintained contract is [contracts/openapi.yaml](../specs/007-author-manageme
 ## Security and privacy
 
 There is no authentication/authorization layer in the current requirements. Do not expose the service publicly without a gateway or a separately approved authentication design. Keep production credentials in a secret store/environment injection, not in source control. Error logs do not include client-provided validation details; internal failures retain server-side exception details.
+
+Known operational and migration follow-ups are tracked in the [technical-debt register](./technical-debt.md).

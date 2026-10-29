@@ -40,7 +40,7 @@
 
 ### Implementation for User Story 1
 
-- [x] T014 [US1] Record existing Book endpoint behavior and technical debt in `docs/functional.md` and `docs/technical.md`
+- [x] T014 [US1] Record existing Book endpoint behavior in `docs/functional.md` and `docs/technical.md`; detailed technical debt is tracked in `docs/technical-debt.md`
 - [x] T015 [US1] Implement the Book domain entity and category rules in `src/Bookstore.Domain/Books/Book.cs` and `src/Bookstore.Domain/Books/Category.cs`
 - [x] T016 [US1] Implement Book repository abstractions and MongoDB mappings in `src/Bookstore.Application/Books/IBookRepository.cs` and `src/Bookstore.Infrastructure/Books/MongoBookRepository.cs`
 - [x] T017 [US1] Implement asynchronous Book use cases in `src/Bookstore.Application/Books/BookService.cs`
@@ -132,4 +132,15 @@
 
 ## Implementation Strategy
 
-Deliver the documented .NET Book API first as the compatibility MVP, then add Author create/list/get, soft deletion, and Book association/filtering in separate tested increments. Keep the legacy author field until the staged backfill has been validated. Complete coverage and documentation gates before integrating each task branch into `main`.
+Deliver the documented .NET Book API first as the compatibility MVP, then add Author create/list/get, soft deletion, and Book association/filtering in separate tested increments. Keep the legacy author field until the staged backfill has been validated. The completed feature was integrated directly on `main`; `docs/legacy-api-and-plan` was merged, and no `007-author-management` branch was created.
+
+## Phase 8: Evaluator feedback remediation
+
+**Purpose**: Make the committed deliverables self-contained, remove the superseded Java stack, and document evaluator-relevant environment and remaining debt.
+
+- [x] T047 Track the user-provided `FEAT-007.md` and `PROMPT.md` referenced by the feature specification and plan.
+- [x] T048 Remove the superseded Java `pom.xml`, `src/main/java/`, and `src/test/java/` after verifying the .NET solution and integration tests pass.
+- [x] T049 Create `docs/technical-debt.md` and link it from functional and technical documentation; cover authentication, staging, legacy compatibility, migration review, OpenAPI schema differences, and outstanding manual QA.
+- [x] T050 Correct the T014 documentation claim, record actual branch history in the spec/plan/tasks, and remove harness-only material from `README.md`.
+- [x] T051 Document Docker socket requirements for Testcontainers and the configured 85% Domain/Application Coverlet threshold without misclassifying Docker-unavailable failures or changing coverage scope.
+- [x] T052 Verify links, confirm no legacy Java project remains, run all .NET tests with Docker access, and record final coverage results.

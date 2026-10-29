@@ -41,7 +41,9 @@ Run unit and MongoDB-backed API integration tests:
 dotnet test
 ```
 
-Docker must be available for the integration-test MongoDB Testcontainer. Coverage is collected for Domain and Application code and the 85% line threshold is enforced by the test project:
+Docker must be available to Testcontainers, and the Docker socket must be accessible to the test process. Without Docker access, MongoDB-backed integration tests fail before exercising the API; this is an environment prerequisite, not an application test failure.
+
+Coverlet is configured in `tests/Bookstore.Tests/Bookstore.Tests.csproj` to collect Domain and Application line coverage and enforce an 85% threshold:
 
 ```sh
 dotnet test --no-restore
@@ -59,47 +61,8 @@ See [docs/testing.md](./docs/testing.md) for focused runs and report locations.
 - `Book.authorId` is the stable reference. The legacy `author` string remains for compatibility.
 - Author deletion is soft; linked Books remain unchanged.
 
-See [docs/functional.md](./docs/functional.md), [docs/technical.md](./docs/technical.md), and [specs/007-author-management/plan.md](./specs/007-author-management/plan.md).
+See [docs/functional.md](./docs/functional.md), [docs/technical.md](./docs/technical.md), [docs/technical-debt.md](./docs/technical-debt.md), and [specs/007-author-management/plan.md](./specs/007-author-management/plan.md).
 
 ## Maintainers
 
-Maintainer and support-channel ownership has not yet been assigned. Contact the repository owner until a team contact is designated.
-
-## Harness Architecture
-
-### Tools
-
-| Tool | Why | Install (reference) |
-|------|-----|---------------------|
-| **GitHub MCP** | Fetch issues (included in `.mcp.json`) | Uses Copilot GitHub auth — `https://api.githubcopilot.com/mcp/` with `X-MCP-Toolsets: issues` |
-| **CodeGraph** | Code navigation (base) | `npm i -g @colbymchenry/codegraph` → `codegraph install` → in repo `codegraph init` |
-| **RTK** | Compress shell/test noise | `brew install rtk-ai/tap/rtk` (or Cargo from `rtk-ai/rtk`) → `rtk gain` to verify → `rtk init -g --copilot` |
-| **Caveman** | Chat prose lite only | `npx skills add JuliusBrussee/caveman -g` → use `/caveman lite` in chat |
-| **Graphify** (optional) | Project/docs/schema map | Install per [Graphify](https://github.com/safishamsi/graphify), then add the MCP block below |
-| **Spec Kit** (optional) | Spec-driven delivery | [github/spec-kit](https://github.com/github/spec-kit) `specify init` for Copilot |
-| **grill-with-docs** (optional) | ADRs / CONTEXT alignment | From [mattpocock/skills](https://github.com/mattpocock/skills) |
-
-### Optional Graphify MCP
-
-Add only if Graphify is installed. Portable `.mcp.json`:
-
-```json
-"graphify": {
-  "type": "stdio",
-  "command": "graphify",
-  "args": [".", "--mcp"]
-}
-```
-
-VS Code `.vscode/mcp.json` uses the same server entry under `"servers"`.
-
-### Harness configuration
-
-- **GitHub MCP** loads issues before work.
-- **CodeGraph** supports code navigation.
-- **Graphify** maps project documentation and schemas when installed.
-- **RTK** reduces noisy shell output.
-- **Caveman lite** is for chat prose only, never committed specs or PR text.
-- **Spec Kit** is the sole delivery framework when used.
-
-No phase profiles. No parallel Superpowers + Spec Kit.
+Repository owner: [luismatiasmendes-dvt](https://github.com/luismatiasmendes-dvt). For support or to report an issue, use the [repository issue tracker](https://github.com/luismatiasmendes-dvt/bookstore-kata-dotnet/issues).

@@ -3,7 +3,6 @@
 .dockerignore
 **/bin/
 **/obj/
-**/target/
 **/TestResults/
 **/coverage/
 **/coverage.cobertura.xml

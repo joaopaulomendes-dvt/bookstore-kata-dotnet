@@ -1,6 +1,6 @@
 # Feature Specification: Book Author Management
 
-**Feature Branch**: `007-author-management`
+**Delivery Branch**: `main` (feature work is integrated; no `007-author-management` branch was created)
 **Status**: Approved
 **Input**: `FEAT-007.md` and `PROMPT.md`
 
