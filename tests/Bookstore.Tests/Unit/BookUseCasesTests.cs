@@ -18,11 +18,54 @@ public sealed class BookUseCasesTests
         var books = new InMemoryBookRepository();
         var service = CreateService(books: books);
 
-        await service.ListAsync("programming", AuthorId, "Octavia Butler", CancellationToken.None);
+        await service.ListAsync("programming", AuthorId, "Octavia Butler", null, CancellationToken.None);
 
         Assert.Equal(6, books.LastCategoryId);
         Assert.Equal(AuthorId, books.LastAuthorId);
         Assert.Equal("Octavia Butler", books.LastAuthorName);
+    }
+
+    [Fact]
+    public async Task ListAsync_AuthorNameSearch_TrimsAndPassesToRepository()
+    {
+        var books = new InMemoryBookRepository();
+        var service = CreateService(books: books);
+
+        await service.ListAsync(null, null, null, "  butler  ", CancellationToken.None);
+
+        Assert.Equal("butler", books.LastAuthorNameSearch);
+    }
+
+    [Fact]
+    public async Task ListAsync_AuthorNameSearch_RejectsTermsLongerThan255Characters()
+    {
+        var service = CreateService();
+
+        await Assert.ThrowsAsync<DomainValidationException>(() =>
+            service.ListAsync(null, null, null, new string('a', 256), CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ListAsync_AuthorNameSearch_Accepts255CharacterTerm()
+    {
+        var books = new InMemoryBookRepository();
+        var service = CreateService(books: books);
+        var search = new string('a', 255);
+
+        await service.ListAsync(null, null, null, search, CancellationToken.None);
+
+        Assert.Equal(search, books.LastAuthorNameSearch);
+    }
+
+    [Fact]
+    public async Task ListAsync_WhitespaceAuthorNameSearch_DoesNotFilter()
+    {
+        var books = new InMemoryBookRepository();
+        var service = CreateService(books: books);
+
+        await service.ListAsync(null, null, null, "   ", CancellationToken.None);
+
+        Assert.Null(books.LastAuthorNameSearch);
     }
 
     [Fact]
@@ -31,7 +74,7 @@ public sealed class BookUseCasesTests
         var service = CreateService();
 
         await Assert.ThrowsAsync<DomainValidationException>(() =>
-            service.ListAsync("unknown", null, null, CancellationToken.None));
+            service.ListAsync("unknown", null, null, null, CancellationToken.None));
     }
 
     [Fact]
@@ -40,7 +83,7 @@ public sealed class BookUseCasesTests
         var service = CreateService();
 
         await Assert.ThrowsAsync<DomainValidationException>(() =>
-            service.ListAsync(null, "invalid", null, CancellationToken.None));
+            service.ListAsync(null, "invalid", null, null, CancellationToken.None));
     }
 
     [Fact]
@@ -288,6 +331,7 @@ public sealed class BookUseCasesTests
         public int? LastCategoryId { get; private set; }
         public string? LastAuthorId { get; private set; }
         public string? LastAuthorName { get; private set; }
+        public string? LastAuthorNameSearch { get; private set; }
         public string? LastFindId { get; private set; }
         public DateTime? LastUpdatedAt { get; private set; }
 
@@ -295,11 +339,13 @@ public sealed class BookUseCasesTests
             int? categoryId,
             string? authorId,
             string? authorName,
+            string? authorNameSearch,
             CancellationToken cancellationToken)
         {
             LastCategoryId = categoryId;
             LastAuthorId = authorId;
             LastAuthorName = authorName;
+            LastAuthorNameSearch = authorNameSearch;
             return Task.FromResult<IReadOnlyList<Book>>(_books);
         }
 

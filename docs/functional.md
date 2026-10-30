@@ -20,7 +20,12 @@ retrieve one by identifier or through the older lookup route, create a book, and
 quantity and active state. Deactivating a book records an inactive date. This API does not
 provide a book deletion operation.
 
-Books may be listed by category, Author ID, or the legacy exact Author name. Category
+Books may be listed by category, stable Author ID, a partial Author-name search, or the
+legacy exact Author name. The `authorName` search is a case-insensitive literal substring
+match against the Author display name stored with each Book. Surrounding whitespace is
+ignored, a blank value adds no filter, and terms longer than 255 characters are rejected.
+Search criteria combine: when multiple filters are supplied, a Book must satisfy all of
+them. The existing `author` query remains an exact match for compatibility. Category
 names are case-insensitive in the current API. An unsupported category is rejected with
 400 instead of silently returning the whole catalog. When no category is supplied, all
 categories are included.
@@ -90,7 +95,7 @@ business requirements.
 | Operation | Route | Current behavior |
 |---|---|---|
 | Check API and MongoDB availability | `GET /api/books/health` | Returns 200 when MongoDB responds to a ping. |
-| List books | `GET /api/books` | Returns books, optionally filtered by category, Author ObjectId, or legacy exact Author name. |
+| List books | `GET /api/books?authorName=…` | Returns books, optionally filtered by category, Author ObjectId, case-insensitive partial Author name, or legacy exact `author` name. Supplied filters combine with AND semantics. |
 | Retrieve a book | `GET /api/books/{id}` | Returns a matching book or 404; IDs must be 24-character hexadecimal ObjectIds. |
 | Legacy single-book lookup | `GET /api/books/single?id=…`, `?name=…`, or `?author=…` | Kept for compatibility; new clients should use the ID route. |
 | Create a book | `POST /api/books` | Requires a nonblank title; accepts an Author ID or legacy Author name. |
@@ -118,6 +123,8 @@ exposing stack traces to clients.
   people.
 - The legacy `author` string and exact-name filter remain during the compatibility
   transition. Their removal requires an agreed client migration window.
+- Author-name substring search is not paginated or ranked and may scan the books
+  collection; it is intended for the current catalog scale.
 - A name is a matching aid, not identity; same-name people may need human review.
 - See the [technical-debt register](./technical-debt.md) for operational limitations and
   follow-up actions.

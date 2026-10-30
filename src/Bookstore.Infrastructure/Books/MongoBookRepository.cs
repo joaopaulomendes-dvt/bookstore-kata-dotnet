@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Bookstore.Application.Books;
 using Bookstore.Domain.Books;
 using MongoDB.Bson;
@@ -12,7 +13,8 @@ public sealed class MongoBookRepository(IMongoDatabase database) : IBookReposito
     public async Task<IReadOnlyList<Book>> ListAsync(
         int? categoryId,
         string? authorId,
-        string? authorName,
+        string? exactAuthorName,
+        string? authorNameSearch,
         CancellationToken cancellationToken)
     {
         var filter = Builders<BsonDocument>.Filter.Empty;
@@ -26,9 +28,17 @@ public sealed class MongoBookRepository(IMongoDatabase database) : IBookReposito
             filter &= Builders<BsonDocument>.Filter.Eq("authorId", objectId);
         }
 
-        if (!string.IsNullOrWhiteSpace(authorName))
+        if (!string.IsNullOrWhiteSpace(exactAuthorName))
         {
-            filter &= Builders<BsonDocument>.Filter.Eq("author", authorName);
+            filter &= Builders<BsonDocument>.Filter.Eq("author", exactAuthorName);
+        }
+
+        if (!string.IsNullOrWhiteSpace(authorNameSearch))
+        {
+            var escapedSearch = Regex.Escape(authorNameSearch);
+            filter &= Builders<BsonDocument>.Filter.Regex(
+                "author",
+                new BsonRegularExpression(escapedSearch, "i"));
         }
 
         var documents = await _books.Find(filter).ToListAsync(cancellationToken);

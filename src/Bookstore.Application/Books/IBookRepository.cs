@@ -7,7 +7,8 @@ public interface IBookRepository
     Task<IReadOnlyList<Book>> ListAsync(
         int? categoryId,
         string? authorId,
-        string? authorName,
+        string? exactAuthorName,
+        string? authorNameSearch,
         CancellationToken cancellationToken);
 
     Task<Book?> GetByIdAsync(string id, CancellationToken cancellationToken);

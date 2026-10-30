@@ -25,6 +25,10 @@ public static class BookEndpoints
         group.MapGet("/", ListAsync)
             .WithName("ListBooks")
             .WithSummary("List books with optional category and author filters.")
+            .WithDescription(
+                "The authorName query parameter performs a case-insensitive literal substring search " +
+                "on the stored Author display name. It accepts at most 255 characters. The legacy " +
+                "author parameter remains an exact match.")
             .Produces<IReadOnlyList<BookResponse>>()
             .ProducesApiProblem(StatusCodes.Status400BadRequest)
             .ProducesApiProblem(StatusCodes.Status500InternalServerError);
@@ -79,10 +83,11 @@ public static class BookEndpoints
         string? category,
         string? authorId,
         string? author,
+        string? authorName,
         BookService service,
         CancellationToken cancellationToken)
     {
-        var books = await service.ListAsync(category, authorId, author, cancellationToken);
+        var books = await service.ListAsync(category, authorId, author, authorName, cancellationToken);
         return Results.Ok(books.Select(ToResponse).ToArray());
     }
 

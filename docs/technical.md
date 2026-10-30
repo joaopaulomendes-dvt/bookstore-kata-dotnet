@@ -45,6 +45,20 @@ decisions and use repository contracts; MongoDB repositories persist documents. 
 entities enforce their own invariants. The separate migration executable reads legacy
 Book documents and uses the Author repository when it creates or locates profiles.
 
+## Author-name Book search
+
+`GET /api/books` accepts `authorName` for case-insensitive literal substring matching
+against the Book's stored `author` display-name field. The Application service trims the
+value, ignores it when blank, and rejects a search term longer than 255 characters before
+database access. The MongoDB repository escapes the text before constructing a
+case-insensitive regular-expression predicate, and combines it with category, `authorId`,
+and the legacy exact `author` predicate using AND semantics.
+
+The query works for linked and legacy Books, including Books whose Author profile is
+inactive. It does not change stored data. The existing list operation is unpaged, and
+substring matching does not use a dedicated index; large catalogs may require pagination
+and a separately designed search index.
+
 ## Book creation and Author resolution
 
 ```mermaid

@@ -14,7 +14,8 @@ public sealed class BookService(
     public Task<IReadOnlyList<Book>> ListAsync(
         string? category,
         string? authorId,
-        string? authorName,
+        string? exactAuthorName,
+        string? authorNameSearch,
         CancellationToken cancellationToken)
     {
         var categoryId = Categories.FindId(category);
@@ -28,10 +29,17 @@ public sealed class BookService(
             throw new DomainValidationException("Author ID must be a 24-character hexadecimal ObjectId.");
         }
 
+        authorNameSearch = authorNameSearch?.Trim();
+        if (authorNameSearch?.Length > 255)
+        {
+            throw new DomainValidationException("Author name search must not exceed 255 characters.");
+        }
+
         return bookRepository.ListAsync(
             categoryId,
             authorId,
-            authorName,
+            exactAuthorName,
+            string.IsNullOrEmpty(authorNameSearch) ? null : authorNameSearch,
             cancellationToken);
     }
 

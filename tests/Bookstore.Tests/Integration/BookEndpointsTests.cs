@@ -85,6 +85,183 @@ public sealed class BookEndpointsTests(MongoDbFixture fixture)
     }
 
     [Fact]
+    public async Task ListBooks_AuthorNameSearch_MatchesCaseInsensitiveSubstring()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Kindred",
+            author = "Octavia Butler",
+            categoryId = "Fiction",
+            quantity = 1,
+            active = true
+        });
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Small Gods",
+            author = "Terry Pratchett",
+            categoryId = "Fiction",
+            quantity = 1,
+            active = true
+        });
+
+        var response = await client.GetAsync("/api/books?authorName=butler");
+        var books = await response.Content.ReadFromJsonAsync<JsonElement[]>();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(books);
+        Assert.Single(books);
+        Assert.Equal("Kindred", books[0].GetProperty("title").GetString());
+    }
+
+    [Fact]
+    public async Task ListBooks_AuthorNameSearch_TreatsRegexCharactersAsLiteralText()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "C++ Primer",
+            author = "Stanley Lippman C++",
+            categoryId = "Programming",
+            quantity = 1,
+            active = true
+        });
+
+        var response = await client.GetAsync($"/api/books?authorName={Uri.EscapeDataString("C++")}");
+        var books = await response.Content.ReadFromJsonAsync<JsonElement[]>();
+        var regexMetacharacters = await client.GetFromJsonAsync<JsonElement[]>(
+            $"/api/books?authorName={Uri.EscapeDataString(".*")}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(books);
+        Assert.Single(books);
+        Assert.Equal("C++ Primer", books[0].GetProperty("title").GetString());
+        Assert.NotNull(regexMetacharacters);
+        Assert.Empty(regexMetacharacters);
+    }
+
+    [Fact]
+    public async Task ListBooks_AuthorNameSearch_NoMatchReturnsEmptyCollection()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+
+        var books = await client.GetFromJsonAsync<JsonElement[]>(
+            "/api/books?authorName=no-such-author");
+
+        Assert.NotNull(books);
+        Assert.Empty(books);
+    }
+
+    [Fact]
+    public async Task ListBooks_AuthorNameSearch_TermsLongerThan255CharactersReturnBadRequest()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync($"/api/books?authorName={new string('a', 256)}");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task ListBooks_AuthorNameSearch_ComposesWithCategoryAndAuthorIdFilters()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+        var authorResponse = await client.PostAsJsonAsync("/api/authors", new { name = "Octavia Butler" });
+        using var author = JsonDocument.Parse(await authorResponse.Content.ReadAsStringAsync());
+        var authorId = author.RootElement.GetProperty("id").GetString();
+
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Parable of the Sower",
+            authorId,
+            categoryId = "Fiction",
+            quantity = 1,
+            active = true
+        });
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Programming with Butler",
+            authorId,
+            categoryId = "Programming",
+            quantity = 1,
+            active = true
+        });
+
+        var books = await client.GetFromJsonAsync<JsonElement[]>(
+            $"/api/books?authorId={authorId}&authorName=butler&category=Fiction");
+
+        Assert.NotNull(books);
+        Assert.Single(books);
+        Assert.Equal("Parable of the Sower", books[0].GetProperty("title").GetString());
+    }
+
+    [Fact]
+    public async Task ListBooks_AuthorNameSearch_IncludesBooksLinkedToInactiveAuthors()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+        var authorResponse = await client.PostAsJsonAsync("/api/authors", new { name = "Octavia Butler" });
+        using var author = JsonDocument.Parse(await authorResponse.Content.ReadAsStringAsync());
+        var authorId = author.RootElement.GetProperty("id").GetString();
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Kindred",
+            authorId,
+            categoryId = "Fiction",
+            quantity = 1,
+            active = true
+        });
+
+        var deleteResponse = await client.DeleteAsync($"/api/authors/{authorId}");
+        var books = await client.GetFromJsonAsync<JsonElement[]>(
+            "/api/books?authorName=butler");
+
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+        Assert.NotNull(books);
+        Assert.Single(books);
+        Assert.Equal("Kindred", books[0].GetProperty("title").GetString());
+    }
+
+    [Fact]
+    public async Task ListBooks_LegacyAuthorFilter_RemainsExactWhileAuthorNameSearchIsPartial()
+    {
+        using var factory = fixture.CreateFactory();
+        using var client = factory.CreateClient();
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Kindred",
+            author = "Octavia Butler",
+            categoryId = "Fiction",
+            quantity = 1,
+            active = true
+        });
+        await client.PostAsJsonAsync("/api/books", new
+        {
+            title = "Parable of the Sower",
+            author = "Octavia L. Butler",
+            categoryId = "Fiction",
+            quantity = 1,
+            active = true
+        });
+
+        var exact = await client.GetFromJsonAsync<JsonElement[]>(
+            "/api/books?author=Octavia%20Butler");
+        var partial = await client.GetFromJsonAsync<JsonElement[]>(
+            "/api/books?authorName=butler");
+
+        Assert.NotNull(exact);
+        Assert.Single(exact);
+        Assert.NotNull(partial);
+        Assert.Equal(2, partial.Length);
+    }
+
+    [Fact]
     public async Task ListBooks_MalformedAuthorId_ReturnsBadRequestProblemDetails()
     {
         using var factory = fixture.CreateFactory();
@@ -110,6 +287,13 @@ public sealed class BookEndpointsTests(MongoDbFixture fixture)
         var schemas = document.RootElement.GetProperty("components").GetProperty("schemas");
         Assert.True(paths.TryGetProperty("/api/books", out var books));
         Assert.True(paths.TryGetProperty("/api/authors", out var authors));
+        Assert.Contains(
+            books.GetProperty("get").GetProperty("parameters").EnumerateArray(),
+            parameter => parameter.GetProperty("name").GetString() == "authorName");
+        Assert.Contains(
+            "case-insensitive literal substring",
+            books.GetProperty("get").GetProperty("description").GetString(),
+            StringComparison.OrdinalIgnoreCase);
         Assert.Equal(
             "#/components/schemas/CreateBookRequest",
             books.GetProperty("post").GetProperty("requestBody")

@@ -62,6 +62,7 @@ See [docs/testing.md](./docs/testing.md) for focused runs and report locations.
 - Serilog provides structured JSON logs, and FluentValidation validates incoming request records.
 - MongoDB ObjectIds remain the persisted identity; API DTOs expose their hexadecimal string representation.
 - `Book.authorId` is the stable reference. The legacy `author` string remains for compatibility.
+- `GET /api/books?authorName=...` finds Books by a case-insensitive Author-name fragment; `author=...` retains its legacy exact-match behavior.
 - Author deletion is soft; linked Books remain unchanged.
 
 See [docs/functional.md](./docs/functional.md), [docs/technical.md](./docs/technical.md), [docs/technical-debt.md](./docs/technical-debt.md), and [specs/007-author-management/plan.md](./specs/007-author-management/plan.md).

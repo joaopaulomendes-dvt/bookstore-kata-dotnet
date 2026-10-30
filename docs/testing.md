@@ -54,11 +54,13 @@ Both included assemblies exceeded the configured 85% line threshold.
 
 The evaluator separately reported 75.5% total line coverage and 98.3% for Domain. The evaluator's full denominator, assembly inclusion/exclusion rules, and instrumentation configuration were not available in the repository or provided evidence, so that result could not be reproduced or compared as an equivalent measurement. The local 96.9% is explicitly limited to Domain and Application; it is not presented as whole-repository coverage or as a replacement for the evaluator's 75.5%.
 
+On 2026-10-30, the Docker-enabled Release run passed all 59 tests (0 failed, 0 skipped), including the author-name search scenarios. Coverlet reported 95.79% line coverage for `Bookstore.Application`, 98.19% for `Bookstore.Domain`, and 96.95% combined coverage, above the configured 85% threshold. An initial run reported 0% for Domain and failed the threshold; two subsequent full-suite runs with the same configuration reported the values above, including one run with the threshold enabled. The initial result was not reproducible.
+
 ## Validation scenarios
 
 - Domain: Author name normalization, required/max-length name, website/email validation, and deactivation state.
 - Application: category mapping, ID validation, Author resolution, legacy name compatibility, timestamp handling, and not-found cases.
-- API + MongoDB: Book create/list/get/update, Author create/list/get/soft-delete, unique index behavior, Problem Details, reference filtering, and idempotent backfill.
+- API + MongoDB: Book create/list/get/update, Author create/list/get/soft-delete, unique index behavior, Problem Details, reference filtering, idempotent backfill, and Author-name substring search (including case-insensitive matches, literal metacharacters, empty results, maximum length, and combined filters).
 - API validation and observability: invalid request payloads return Problem Details; JSON logs contain request trace enrichment.
 - Backfill QA: blank legacy names are skipped; malformed author IDs are repaired without changing Book identity, legacy author text, active state, or unrelated fields; a second run is safe.
 - OpenAPI: verify `/openapi/v1.json`, required request schemas and constraints, runtime path/method parity with the checked-in contract, and Production Scalar behavior.

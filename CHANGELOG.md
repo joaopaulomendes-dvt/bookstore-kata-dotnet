@@ -10,6 +10,8 @@ they do not imply a historical branch, pull request, deployment, or QA sign-off.
 - Added Serilog JSON logging with request trace enrichment.
 - Added FluentValidation at the HTTP request boundary while retaining domain validation
   and RFC 7807 error responses.
+- Added case-insensitive partial Author-name search to the Book catalog while preserving
+  stable Author ID filtering and legacy exact-name filtering.
 - Expanded functional documentation with source-confirmed legacy behavior and business
   context.
 - Added Mermaid diagrams for runtime architecture, Author resolution, Author soft-delete,
@@ -17,8 +19,9 @@ they do not imply a historical branch, pull request, deployment, or QA sign-off.
 
 ### Verification
 
-- Docker-enabled .NET 10 Release suite: 48/48 tests passed; configured Domain/Application
-  coverage measured 96.9% line coverage combined (Domain 98.19%, Application 95.65%).
+- Docker-enabled .NET 10 Release suite: 59/59 tests passed; configured Domain/Application
+  coverage measured 96.95% line coverage combined (Domain 98.19%, Application 95.79%),
+  above the 85% threshold.
 - Runtime QA verified Book/Author flows, unavailable-database health/error behavior,
   backfill handling and rerun safety, key OpenAPI contract behavior, and Production-only
   Scalar exclusion. Detailed scope and limitations are recorded in `docs/testing.md`.
